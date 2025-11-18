@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "chess-pgn-recorder"
-version = "0.1.0a1"
+version = "0.1.1a1"
 description = "Interactive chess game recorder that converts moves in algebraic notation to PGN files with legal move validation"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -34,6 +34,9 @@ dependencies = [
 dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+    "black>=23.0.0",
 ]
 
 [project.scripts]
@@ -51,12 +54,24 @@ packages = ["src"]
 dependencies = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+    "black>=23.0.0",
 ]
 
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests/}"
 test-cov = "pytest --cov=src --cov-report=term-missing {args:tests/}"
 test-verbose = "pytest -v {args:tests/}"
+lint = "flake8 src/ tests/"
+typecheck = "mypy src/"
+format = "black src/ tests/"
+format-check = "black --check --diff src/ tests/"
+check-all = [
+    "lint",
+    "typecheck",
+    "test-cov",
+]
 
 [tool.hatch.envs.test]
 dependencies = [
@@ -91,5 +106,43 @@ exclude_lines = [
     "if __name__ == .__main__.:",
     "raise AssertionError",
     "raise NotImplementedError",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py38", "py39", "py310", "py311", "py312"]
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  __pycache__
+  | \.git
+  | \.hatch
+  | \.mypy_cache
+  | \.pytest_cache
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+no_strict_optional = true
+files = ["src"]
+
+[tool.flake8]
+max-line-length = 127
+extend-ignore = ["E203", "W503"]
+exclude = [
+    ".git",
+    "__pycache__",
+    ".hatch",
+    ".pytest_cache",
+    ".mypy_cache",
+    "build",
+    "dist",
 ]
 

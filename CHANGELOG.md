@@ -1,5 +1,60 @@
 # Changelog
 
+## [0.1.1-alpha] - 2025-11-18
+
+### Added
+- **GitHub Actions CI/CD Pipeline** (`.github/workflows/ci.yml`)
+  - Multi-version testing on Python 3.8, 3.9, 3.10, 3.11, 3.12
+  - Automated linting with Flake8
+  - Type checking with Mypy
+  - Code formatting validation with Black
+  - Coverage report integration with Codecov
+  
+- **Development Tools Configuration**
+  - `.flake8` configuration file for linting standards
+  - Black formatter configuration in `pyproject.toml`
+  - Mypy type checker configuration in `pyproject.toml`
+  
+- **Hatch Scripts for Code Quality**
+  - `hatch run lint` - Run Flake8 linter
+  - `hatch run typecheck` - Run Mypy type checker
+  - `hatch run format` - Auto-format code with Black
+  - `hatch run format-check` - Check code formatting
+  - `hatch run check-all` - Run all quality checks
+  
+- **CONTRIBUTING.md** - Comprehensive contributor guidelines
+  - Development setup instructions
+  - Code quality standards
+  - Testing guidelines
+  - Pull request process
+  - Commit message conventions
+  
+- **CI Badges in README**
+  - GitHub Actions CI status badge
+  - Python version badge
+  - License badge
+  - Code style badge
+
+### Changed
+- **Code Cleanup**
+  - Removed all inline comments from source files
+  - Documentation now provided through docstrings only
+  - Code is self-documenting with clear function/variable names
+  
+- **Documentation Updates**
+  - Added "Continuous Integration" section to README
+  - Updated development workflow documentation
+  - Expanded Hatch commands documentation
+  - Added code quality standards section
+  
+- **Updated `.gitignore`**
+  - Added `.ruff_cache/` directory
+  
+- **Development Dependencies**
+  - Added `flake8>=6.0.0` for linting
+  - Added `mypy>=1.0.0` for type checking
+  - Added `black>=23.0.0` for code formatting
+
 ## [0.1.0-alpha] - 2025-11-18
 
 ### Changed - Project Restructure

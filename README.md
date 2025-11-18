@@ -1,5 +1,10 @@
 # Chess PGN Recorder
 
+[![CI](https://github.com/LalatenduMohanty/chess_pgn_recorder/actions/workflows/ci.yml/badge.svg)](https://github.com/LalatenduMohanty/chess_pgn_recorder/actions/workflows/ci.yml)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 An interactive command-line application that records chess games move-by-move in Standard Algebraic Notation (SAN) and exports them as valid PGN (Portable Game Notation) files with full legal move validation.
 
 ## Features
@@ -427,20 +432,21 @@ This project uses [Hatch](https://hatch.pypa.io/) for modern Python project mana
 ### Hatch Commands
 
 ```bash
-# Run tests
-hatch run test
+# Testing
+hatch run test              # Run all tests
+hatch run test-verbose      # Run tests with verbose output
+hatch run test-cov          # Run tests with coverage report
 
-# Run tests with verbose output
-hatch run test-verbose
+# Code Quality
+hatch run lint              # Run flake8 linter
+hatch run typecheck         # Run mypy type checker
+hatch run format-check      # Check code formatting with black
+hatch run format            # Auto-format code with black
+hatch run check-all         # Run all checks (lint + typecheck + test-cov)
 
-# Run tests with coverage report
-hatch run test-cov
-
-# Enter virtual environment shell
-hatch shell
-
-# Clean environment
-hatch env prune
+# Environment
+hatch shell                 # Enter virtual environment shell
+hatch env prune             # Clean environment
 ```
 
 ### Benefits of Using Hatch
@@ -449,6 +455,38 @@ hatch env prune
 - Consistent testing across environments
 - Modern Python packaging standards
 - Easy script execution
+- Integrated code quality tools
+
+## Continuous Integration
+
+This project uses GitHub Actions for continuous integration:
+
+### CI Pipeline
+- **Multi-version testing**: Tests run on Python 3.8, 3.9, 3.10, 3.11, and 3.12
+- **Code linting**: Flake8 checks for code quality and style issues
+- **Type checking**: Mypy validates type hints and catches type errors
+- **Code formatting**: Black ensures consistent code style
+- **Test coverage**: Coverage reports are generated and uploaded to Codecov
+
+### Running CI Checks Locally
+
+Before pushing code, run all CI checks locally:
+
+```bash
+# Run all checks at once
+hatch run check-all
+
+# Or run individually
+hatch run lint        # Linting with flake8
+hatch run typecheck   # Type checking with mypy
+hatch run test-cov    # Tests with coverage
+```
+
+### Code Quality Standards
+- **Line length**: Maximum 127 characters
+- **Complexity**: Maximum complexity of 10
+- **Type hints**: Encouraged but not strictly enforced
+- **Code style**: Black formatting (100 character line length)
 
 ## Project Structure
 
