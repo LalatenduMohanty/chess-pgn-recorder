@@ -125,7 +125,8 @@ Example:
 - Moves: One move pair per line (e.g., "1. e4 e5 \n")
 - Result appears both in header and at end of move text
 - Trailing space after each move for consistency
-- Filename format: `white_black_YYYY.MM.DD_round.pgn` (spaces replaced with underscores)
+- Filename format: `pgn_output_files/white_black_YYYY.MM.DD_round.pgn` (spaces replaced with underscores)
+- Files saved in dedicated `pgn_output_files/` directory
 
 ---
 
@@ -163,15 +164,22 @@ Example:
    c. Prompt for game result (1-0, 0-1, 1/2-1/2, *)
    d. Ask: "Would you like to preview the PGN file? (y/n)"
    e. If yes, display complete PGN content with borders
-   f. Ask: "Would you like to edit any move? (y/n)"
+   f. Ask: "Would you like to edit moves or add more moves? (y/n)"
    g. If yes:
       - Show numbered list of all moves
-      - Prompt: "Enter move number to edit (or 'done' to finish):"
-      - Allow user to re-enter specific move
-      - Validate new move
-      - Update move in list
-      - Show preview again
+      - Prompt: "Enter move number to edit (1-N), 'add' to add more moves, or 'done' to finish:"
+      - If user enters a number:
+        * Allow user to re-enter specific move
+        * Validate new move
+        * Update move in list
+      - If user enters 'add':
+        * Enter move addition mode
+        * Continue from last move number
+        * Support all move entry commands (help, show, preview, legal, undo)
+        * Return to edit menu when done
+      - Show updated moves after each change
       - Repeat until user types 'done'
+      - Show final PGN preview
    h. Generate filename: white_black_date_round.pgn
    i. Save PGN file
    j. Display success message with filename
@@ -190,6 +198,12 @@ Users can type `done`, `quit`, or `exit` at **any move prompt**:
 - After black's move → Game saves with complete move pair
 - Prompts remind users of this option
 - System provides feedback on how many moves were recorded
+
+Users can also press **Ctrl+C** at any point:
+- Program catches KeyboardInterrupt gracefully
+- If moves are recorded, offers to save before exiting
+- Second Ctrl+C immediately exits without saving
+- Clean exit message displayed
 
 ---
 
@@ -318,25 +332,25 @@ Would you like to preview the PGN file? (y/n): y
 1-0
 ==================================================
 
-Would you like to edit any move? (y/n): y
+Would you like to edit moves or add more moves? (y/n): y
 
 Current moves:
 1. e4 e5
 2. Nf3 Nc6
 3. Bb5 a6
 
-Enter move number to edit (1-3) or 'done' to finish: 2
+Enter move number to edit (1-3), 'add' to add more moves, or 'done' to finish: 2
 Which color? (white/black): black
 Current move: Nc6
 Enter new move: Nf6
-Move updated
+✓ Move updated
 
-Updated moves:
+Current moves:
 1. e4 e5
 2. Nf3 Nf6
 3. Bb5 a6
 
-Enter move number to edit (1-3) or 'done' to finish: done
+Enter move number to edit (1-3), 'add' to add more moves, or 'done' to finish: done
 
 Final PGN:
 
@@ -356,7 +370,7 @@ Final PGN:
 ==================================================
 
 Saving PGN file...
-PGN file saved: Alice_Bob_2025.11.18_1.pgn
+PGN file saved: pgn_output_files/Alice_Bob_2025.11.18_1.pgn
 
 Thank you for using Chess PGN Converter!
 ```
@@ -398,12 +412,13 @@ Thank you for using Chess PGN Converter!
 ## File Output
 
 ### Filename Format
-- **Auto-generated from metadata**: `white_black_date_round.pgn`
-- Example: `Alice_Bob_2025.11.18_1.pgn`
+- **Auto-generated from metadata**: `pgn_output_files/white_black_date_round.pgn`
+- Example: `pgn_output_files/Alice_Bob_2025.11.18_1.pgn`
 - Spaces in player names replaced with underscores
 - Date format: YYYY.MM.DD
 - Auto-append `.pgn` extension if missing
 - If file exists, append number: `Alice_Bob_2025.11.18_1_2.pgn`
+- Output directory is created automatically if it doesn't exist
 
 ### Filename Generation Rules
 ```python
@@ -433,12 +448,14 @@ filename = f"{white_name}_{black_name}_{date}_{round_num}.pgn"
 ### Advanced Features
 - **Preview PGN before saving**  
 - **Allow editing of specific moves before saving**  
+- **Add more moves after stopping early**  
 - **Auto-generate filename from metadata (white_black_date_round.pgn)**  
 - **Show numbered move list during editing**  
 - **Validate edited moves before accepting changes**  
 
 ### User Experience Enhancements
 - **Stop at any time** - Users can quit at any move prompt  
+- **Graceful interruption** - Ctrl+C handled cleanly with save option  
 - **Clean single-line confirmations** - Moves shown with inline checkmark  
 - **Prominent reminders** - Constant visibility of stop option  
 - **Move count feedback** - System reports how many moves were recorded  
@@ -519,24 +536,30 @@ filename = f"{white_name}_{black_name}_{date}_{round_num}.pgn"
 
 ### File Structure (Actual Implementation)
 ```
-chess_notation_pgn/
+chess_pgn_recorder/
+├── chess_pgn_recorder.py  # Main entry point script
 ├── pyproject.toml         # Hatch project configuration
 ├── requirements.txt       # Pip dependencies
-├── chess_pgn.py           # Main application (358 lines)
-│   └── ChessPGNApp class with run() method
-├── move_validator.py      # Format validation (141 lines)
-│   └── MoveValidator class with regex patterns
-├── chess_game.py          # Game logic with board (230 lines)
-│   └── ChessGame class with chess.Board integration
-├── pgn_exporter.py        # PGN generation (173 lines)
-│   └── PGNExporter class with formatting
-├── test_chess_pgn.py      # Unit tests (513 lines, 46 tests)
-├── DESIGN_DOC.md          # This document (649 lines)
-├── README.md              # User documentation (377 lines)
-└── examples/
-    └── sample_game.pgn    # Example output
+├── src/                   # Source code package
+│   ├── __init__.py       # Package initialization
+│   ├── chess_pgn.py      # Main application logic (580 lines)
+│   │   └── ChessPGNApp class with run() method
+│   ├── move_validator.py # Format validation (141 lines)
+│   │   └── MoveValidator class with regex patterns
+│   ├── chess_game.py     # Game logic with board (245 lines)
+│   │   └── ChessGame class with chess.Board integration
+│   └── pgn_exporter.py   # PGN generation (178 lines)
+│       └── PGNExporter class with formatting
+├── tests/                 # Test package
+│   ├── __init__.py       # Test package initialization
+│   └── test_chess_pgn.py # Unit tests (515 lines, 46 tests)
+├── DESIGN_DOC.md          # This document (704 lines)
+├── README.md              # User documentation (548 lines)
+├── examples/
+│   └── sample_game.pgn    # Example output
+└── pgn_output_files/      # Generated PGN files (auto-created)
 
-Total: ~2,450 lines of Python code and documentation
+Total: ~2,900 lines of Python code and documentation
 ```
 
 ### Key Implementation Features
@@ -610,15 +633,22 @@ hatch run test-cov          # With coverage report
 
 ## Project Structure
 ```
-chess_notation_pgn/
+chess_pgn_recorder/
+├── chess_pgn_recorder.py  # Main entry point (executable)
 ├── DESIGN_DOC.md          # This file
 ├── README.md              # User documentation
-├── chess_pgn.py           # Main application
-├── move_validator.py      # Move validation logic
-├── pgn_exporter.py        # PGN generation
-├── test_chess_pgn.py      # Unit tests
-└── examples/              # Sample PGN files
-    └── sample_game.pgn
+├── src/                   # Source code package
+│   ├── __init__.py       # Package initialization
+│   ├── chess_pgn.py      # Main application logic
+│   ├── chess_game.py     # Game state management
+│   ├── move_validator.py # Move validation logic
+│   └── pgn_exporter.py   # PGN generation
+├── tests/                 # Test package
+│   ├── __init__.py       # Test package initialization
+│   └── test_chess_pgn.py # Unit tests
+├── examples/              # Sample PGN files
+│   └── sample_game.pgn
+└── pgn_output_files/      # Generated PGN files (auto-created)
 ```
 
 ---

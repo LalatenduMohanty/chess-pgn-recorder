@@ -10,8 +10,10 @@ An interactive command-line application that records chess games move-by-move in
 - **Complete move support** - Handles pieces, pawns, captures, castling, promotions, check, and checkmate  
 - **Interactive CLI** - User-friendly command-line interface  
 - **Stop at any time** - Type 'done' at any point to finish and save partial games  
+- **Graceful interruption** - Press Ctrl+C to exit with option to save progress  
 - **Preview before save** - Review your game before creating the PGN file  
 - **Edit moves** - Modify any move before finalizing  
+- **Add more moves** - Continue adding moves after stopping early  
 - **Auto-generated filenames** - Files named as `white_black_date_round.pgn`  
 - **Standards compliant** - Generates valid PGN format with Seven Tag Roster  
 
@@ -32,7 +34,13 @@ pip install hatch
 hatch shell  # Creates virtual environment with dependencies
 ```
 
-### Option 3: Install Directly
+### Option 3: Install as Package
+```bash
+cd chess_pgn_recorder
+pip install -e .  # Install in editable mode
+```
+
+### Option 4: Install Directly
 ```bash
 pip install chess>=1.10.0
 ```
@@ -41,20 +49,32 @@ pip install chess>=1.10.0
 
 ### Running the Application
 
+**Option 1: Using the entry point script (Recommended)**
 ```bash
-python chess_pgn.py
+python chess_pgn_recorder.py
 ```
 
 or
 
 ```bash
-python3 chess_pgn.py
+python3 chess_pgn_recorder.py
+```
+
+or if executable:
+
+```bash
+./chess_pgn_recorder.py
+```
+
+**Option 2: If installed as package**
+```bash
+chess-pgn-recorder
 ```
 
 ### Example Session
 
 ```
-$ python chess_pgn.py
+$ python chess_pgn_recorder.py
 
 ============================================================
    Chess Notation to PGN Converter
@@ -112,10 +132,10 @@ Would you like to preview the PGN file? (y/n): y
 *
 ==================================================
 
-Would you like to edit any move? (y/n): n
+Would you like to edit moves or add more moves? (y/n): n
 
 Saving PGN file...
-PGN file saved: Alice_Bob_2025.11.18_1.pgn
+PGN file saved: pgn_output_files/Alice_Bob_2025.11.18_1.pgn
 
 Thank you for using Chess PGN Converter!
 ```
@@ -157,6 +177,96 @@ The resulting PGN will include:
 1. e4 e5 
 2. Nf3 
 *
+```
+
+### Example: Adding More Moves
+
+If you stop early, you can add more moves during the edit phase:
+
+```
+Move 1
+White's move: e4 ✓
+Black's move: e5 ✓
+
+Move 2
+White's move: done
+
+✓ Game stopped. 1 move(s) recorded.
+
+Game ended. Enter result:
+  1-0       White wins
+  0-1       Black wins
+  1/2-1/2   Draw
+  *         In progress/Unknown
+
+Result: *
+
+Would you like to preview the PGN file? (y/n): y
+
+==================================================
+[Event "Friendly Match"]
+[Site "Home"]
+[Date "2025.11.18"]
+[Round "1"]
+[White "Alice"]
+[Black "Bob"]
+[Result "*"]
+
+1. e4 e5 
+*
+==================================================
+
+Would you like to edit moves or add more moves? (y/n): y
+
+Current moves:
+1. e4 e5
+
+Enter move number to edit (1), 'add' to add more moves, or 'done' to finish: add
+
+------------------------------------------------------------
+Adding more moves...
+Type 'done' to finish | Type 'help' for commands
+------------------------------------------------------------
+
+Move 2
+White's move: Nf3 ✓
+Black's move: Nc6 ✓
+
+Move 3
+White's move: Bb5 ✓
+Black's move: a6 ✓
+
+Move 4
+White's move: done
+
+Current moves:
+1. e4 e5
+2. Nf3 Nc6
+3. Bb5 a6
+
+Enter move number to edit (1-3), 'add' to add more moves, or 'done' to finish: done
+
+Final PGN:
+
+==================================================
+[Event "Friendly Match"]
+[Site "Home"]
+[Date "2025.11.18"]
+[Round "1"]
+[White "Alice"]
+[Black "Bob"]
+[Result "*"]
+
+1. e4 e5 
+2. Nf3 Nc6 
+3. Bb5 a6 
+*
+==================================================
+
+Saving PGN file...
+PGN file saved: pgn_output_files/Alice_Bob_2025.11.18_1.pgn
+
+Thank you for using Chess PGN Converter!
 ```
 
 ## Valid Move Notation
@@ -212,6 +322,8 @@ You can type `done` (or `quit`, `exit`) at **any point** during move entry:
 - After entering Black's move → Game saves with complete move pair
 - At the very start → Exit without saving (no moves recorded)
 
+You can also press **Ctrl+C** at any time to interrupt the program. If you have recorded moves, you'll be prompted to save before exiting.
+
 The system will automatically save whatever moves you've entered so far.
 
 ## Output Format
@@ -254,15 +366,17 @@ Generated PGN files follow the standard format with:
 
 ## File Naming
 
-Files are automatically named based on the game metadata:
+Files are automatically named based on the game metadata and saved in the `pgn_output_files/` directory:
 
-**Format**: `white_black_date_round.pgn`
+**Format**: `pgn_output_files/white_black_date_round.pgn`
 
 **Examples**:
-- `Alice_Bob_2025.11.18_1.pgn`
-- `John_Doe_Jane_Smith_2025.11.18_2.pgn`
+- `pgn_output_files/Alice_Bob_2025.11.18_1.pgn`
+- `pgn_output_files/John_Doe_Jane_Smith_2025.11.18_2.pgn`
 
 If a file with the same name exists, a number is appended: `Alice_Bob_2025.11.18_1_2.pgn`
+
+The output directory is created automatically if it doesn't exist.
 
 ## Testing
 
@@ -340,17 +454,23 @@ hatch env prune
 
 ```
 chess_pgn_recorder/
-├── pyproject.toml      # Project configuration (hatchling)
-├── requirements.txt    # Dependencies
-├── DESIGN_DOC.md       # Detailed design documentation
-├── README.md           # This file
-├── chess_pgn.py        # Main application (358 lines)
-├── move_validator.py   # Move validation logic (141 lines)
-├── chess_game.py       # Game state management (230 lines)
-├── pgn_exporter.py     # PGN file generation (173 lines)
-├── test_chess_pgn.py   # Unit tests (513 lines, 46 tests)
-└── examples/
-    └── sample_game.pgn # Example output
+├── chess_pgn_recorder.py   # Main entry point script
+├── pyproject.toml          # Project configuration (hatchling)
+├── requirements.txt        # Dependencies
+├── DESIGN_DOC.md           # Detailed design documentation
+├── README.md               # This file
+├── src/                    # Source code directory
+│   ├── __init__.py        # Package initialization
+│   ├── chess_pgn.py       # Main application logic
+│   ├── chess_game.py      # Game state management
+│   ├── move_validator.py  # Move validation logic
+│   └── pgn_exporter.py    # PGN file generation
+├── tests/                  # Test directory
+│   ├── __init__.py        # Test package initialization
+│   └── test_chess_pgn.py  # Unit tests (46 tests)
+├── examples/
+│   └── sample_game.pgn    # Example output
+└── pgn_output_files/       # Generated PGN files (auto-created)
 ```
 
 ## Common Errors and Solutions

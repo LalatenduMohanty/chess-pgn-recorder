@@ -6,7 +6,7 @@ Generates PGN (Portable Game Notation) format output from chess games.
 
 import os
 from typing import List, Tuple, Optional
-from chess_game import ChessGame
+from .chess_game import ChessGame
 
 
 class PGNExporter:
@@ -144,18 +144,21 @@ class PGNExporter:
             counter += 1
     
     def export_to_file(self, game: ChessGame, filename: Optional[str] = None, 
-                       directory: str = '.') -> str:
+                       directory: str = 'pgn_output_files') -> str:
         """
         Export game to PGN file.
         
         Args:
             game: ChessGame object to export
             filename: Optional custom filename (if None, auto-generate)
-            directory: Directory to save file in
+            directory: Directory to save file in (default: 'pgn_output_files')
             
         Returns:
             Path to the saved file
         """
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        
         if filename is None:
             filename = self.generate_filename(game.metadata)
         

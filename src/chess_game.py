@@ -7,7 +7,7 @@ Uses python-chess library for board state tracking and legal move validation.
 
 from typing import List, Tuple, Optional, Dict
 import chess
-from move_validator import MoveValidator
+from .move_validator import MoveValidator
 
 
 class ChessGame:

@@ -7,11 +7,15 @@ Includes tests for board state tracking with python-chess integration.
 
 import unittest
 import os
+import sys
 import tempfile
 import chess
-from move_validator import MoveValidator
-from chess_game import ChessGame
-from pgn_exporter import PGNExporter
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from src.move_validator import MoveValidator
+from src.chess_game import ChessGame
+from src.pgn_exporter import PGNExporter
 
 
 class TestMoveValidator(unittest.TestCase):
@@ -394,7 +398,6 @@ class TestPGNExporter(unittest.TestCase):
             filepath = self.exporter.export_to_file(self.game, directory=tmpdir)
             self.assertTrue(os.path.exists(filepath))
             
-            # Read and verify content
             with open(filepath, 'r') as f:
                 content = f.read()
                 self.assertIn('[Event "Test Game"]', content)
@@ -403,13 +406,9 @@ class TestPGNExporter(unittest.TestCase):
     def test_unique_filename(self):
         """Test that duplicate filenames get numbered."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            # Create first file
             filepath1 = self.exporter.export_to_file(self.game, directory=tmpdir)
-            
-            # Create second file with same metadata
             filepath2 = self.exporter.export_to_file(self.game, directory=tmpdir)
             
-            # Should be different files
             self.assertNotEqual(filepath1, filepath2)
             self.assertTrue(os.path.exists(filepath1))
             self.assertTrue(os.path.exists(filepath2))
