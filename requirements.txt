@@ -1,0 +1,11 @@
+# Chess Notation to PGN Converter
+
+# Python version requirement
+# python>=3.8
+
+# Core dependency
+chess>=1.10.0
+
+# Optional: For running tests
+# pytest>=7.0.0
+
