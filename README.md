@@ -1,605 +1,154 @@
 # Chess PGN Recorder
 
 [![CI](https://github.com/LalatenduMohanty/chess_pgn_recorder/actions/workflows/ci.yml/badge.svg)](https://github.com/LalatenduMohanty/chess_pgn_recorder/actions/workflows/ci.yml)
+[![PyPI version](https://badge.fury.io/py/chess-pgn-recorder.svg)](https://pypi.org/project/chess-pgn-recorder/)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![Downloads](https://pepy.tech/badge/chess-pgn-recorder)](https://pepy.tech/project/chess-pgn-recorder)
 
-An interactive command-line application that records chess games move-by-move in Standard Algebraic Notation (SAN) and exports them as valid PGN (Portable Game Notation) files with full legal move validation.
+Record chess games move-by-move in Standard Algebraic Notation, validate every move for legality using `python-chess`, and export polished PGN files that work with any chess analysis tool (Chess.com, Lichess, etc.).
 
-## Features
+---
 
-- **Legal move validation** - Uses `python-chess` to validate moves are legal, not just format  
-- **Board state tracking** - Maintains full chess board state with check/checkmate detection  
-- **Input validation** - Validates all chess moves in Standard Algebraic Notation  
-- **Complete move support** - Handles pieces, pawns, captures, castling, promotions, check, and checkmate  
-- **Interactive CLI** - User-friendly command-line interface  
-- **Stop at any time** - Type 'done' at any point to finish and save partial games  
-- **Graceful interruption** - Press Ctrl+C to exit with option to save progress  
-- **Preview before save** - Review your game before creating the PGN file  
-- **Edit moves** - Modify any move before finalizing  
-- **Add more moves** - Continue adding moves after stopping early  
-- **Auto-generated filenames** - Files named as `white_black_date_round.pgn`  
-- **Standards compliant** - Generates valid PGN format with Seven Tag Roster  
-
-## Installation
-
-Requires Python 3.8+ and the `chess` library.
-
-### Option 1: Using pip (Simple)
-```bash
-cd chess_pgn_recorder
-pip install -r requirements.txt
-```
-
-### Option 2: Using Hatch (Recommended for Development)
-```bash
-cd chess_pgn_recorder
-pip install hatch
-hatch shell  # Creates virtual environment with dependencies
-```
-
-### Option 3: Install as Package
-```bash
-cd chess_pgn_recorder
-pip install -e .  # Install in editable mode
-```
-
-### Option 4: Install Directly
-```bash
-pip install chess>=1.10.0
-```
-
-## Usage
-
-### Running the Application
-
-**Option 1: Using the entry point script (Recommended)**
-```bash
-python chess_pgn_recorder.py
-```
-
-or
+## Quick Start
 
 ```bash
-python3 chess_pgn_recorder.py
-```
-
-or if executable:
-
-```bash
-./chess_pgn_recorder.py
-```
-
-**Option 2: If installed as package**
-```bash
+pip install chess-pgn-recorder
 chess-pgn-recorder
 ```
 
-### Example Session
+Or from source:
+```bash
+git clone https://github.com/LalatenduMohanty/chess_pgn_recorder.git
+cd chess_pgn_recorder
+pip install -r requirements.txt
+python chess_pgn_recorder.py
+```
+
+---
+
+## What It Does
+
+- **Legal move validation** - Every move checked using `python-chess`
+- **Interactive workflow** - Stop, edit, or add moves at any time
+- **Standards compliant** - Generates valid PGN with Seven Tag Roster
+- **User-friendly** - Commands: `done`, `undo`, `show`, `preview`, `legal`, `help`
+- **Graceful Ctrl+C** - Save partial games on interrupt
+
+---
+
+## Example Usage
 
 ```
-$ python chess_pgn_recorder.py
-
-============================================================
-   Chess Notation to PGN Converter
-============================================================
-
-Convert your chess game moves to PGN format!
-Type 'help' during move entry for command list.
-
-Enter game information:
-
+$ chess-pgn-recorder
 Event: Friendly Match
-Site: Home
-Date (YYYY.MM.DD) [press Enter for today]: 
-Round: 1
-White player: Alice
-Black player: Bob
+White player: Alice | Black player: Bob
 
-Ready to enter moves! (Type 'help' for commands)
+Move 1  White: e4 ✓  Black: e5 ✓
+Move 2  White: Nf3 ✓  Black: Nc6 ✓
+Move 3  White: Bb5 ✓  Black: done
 
+Preview PGN? y
+[Event "Friendly Match"]...
+1. e4 e5  2. Nf3 Nc6  3. Bb5 *
 
-Move 1
-White's move: e4 [Valid]
-Black's move: e5 [Valid]
-
-Move 2
-White's move: Nf3 [Valid]
-Black's move: Nc6 [Valid]
-
-Move 3
-White's move: Bb5 [Valid]
-Black's move: done
-
-Game ended. Enter result:
-  1-0       White wins
-  0-1       Black wins
-  1/2-1/2   Draw
-  *         In progress/Unknown
-
-Result: *
-
-Would you like to preview the PGN file? (y/n): y
-
-==================================================
-[Event "Friendly Match"]
-[Site "Home"]
-[Date "2025.11.18"]
-[Round "1"]
-[White "Alice"]
-[Black "Bob"]
-[Result "*"]
-
-1. e4 e5 
-2. Nf3 Nc6 
-3. Bb5 
-*
-==================================================
-
-Would you like to edit moves or add more moves? (y/n): n
-
-Saving PGN file...
-PGN file saved: pgn_output_files/Alice_Bob_2025.11.18_1.pgn
-
-Thank you for using Chess PGN Converter!
+Edit or add moves? n
+PGN saved: pgn_output_files/Alice_Bob_2025.11.18_1.pgn
 ```
 
-### Example: Stopping Mid-Game
+---
 
-You can stop at any point and save partial games:
+## Commands
 
-```
-Move 1
-White's move: e4 [Valid]
-Black's move: e5 [Valid]
+| Command | Action |
+|---------|--------|
+| `done`, `quit`, `exit` | Stop and save |
+| `undo` | Remove last move |
+| `show` | Display all moves |
+| `preview` | Show PGN |
+| `legal` | List legal moves |
+| `help` | Show notation guide |
 
-Move 2
-White's move: Nf3 [Valid]
-Black's move: done
+---
 
-Game stopped. 1 complete move(s) + 1 white move recorded.
+## What To Do With Your PGN Files
 
-Game ended. Enter result:
-  1-0       White wins
-  0-1       Black wins
-  1/2-1/2   Draw
-  *         In progress/Unknown
+Generated files work with all major chess platforms:
 
-Result: *
-```
+- **[Chess.com Analysis](https://www.chess.com/analysis)** - Upload for computer analysis, move accuracy scores, and insights
+- **[Lichess Study](https://lichess.org/study)** - Free Stockfish analysis, add comments, share with others  
+- **ChessBase / SCID** - Build and manage your game database
+- **Chess engines** - Analyze with Stockfish, Komodo, or other UCI engines
+- **Share & embed** - Standard PGN format works everywhere
 
-The resulting PGN will include:
-```pgn
-[Event "Friendly Match"]
-[Site "Home"]
-[Date "2025.11.18"]
-[Round "1"]
-[White "Alice"]
-[Black "Bob"]
-[Result "*"]
+Find your PGN files in the `pgn_output_files/` directory.
 
-1. e4 e5 
-2. Nf3 
-*
-```
+---
 
-### Example: Adding More Moves
-
-If you stop early, you can add more moves during the edit phase:
-
-```
-Move 1
-White's move: e4 ✓
-Black's move: e5 ✓
-
-Move 2
-White's move: done
-
-✓ Game stopped. 1 move(s) recorded.
-
-Game ended. Enter result:
-  1-0       White wins
-  0-1       Black wins
-  1/2-1/2   Draw
-  *         In progress/Unknown
-
-Result: *
-
-Would you like to preview the PGN file? (y/n): y
-
-==================================================
-[Event "Friendly Match"]
-[Site "Home"]
-[Date "2025.11.18"]
-[Round "1"]
-[White "Alice"]
-[Black "Bob"]
-[Result "*"]
-
-1. e4 e5 
-*
-==================================================
-
-Would you like to edit moves or add more moves? (y/n): y
-
-Current moves:
-1. e4 e5
-
-Enter move number to edit (1), 'add' to add more moves, or 'done' to finish: add
-
-------------------------------------------------------------
-Adding more moves...
-Type 'done' to finish | Type 'help' for commands
-------------------------------------------------------------
-
-Move 2
-White's move: Nf3 ✓
-Black's move: Nc6 ✓
-
-Move 3
-White's move: Bb5 ✓
-Black's move: a6 ✓
-
-Move 4
-White's move: done
-
-Current moves:
-1. e4 e5
-2. Nf3 Nc6
-3. Bb5 a6
-
-Enter move number to edit (1-3), 'add' to add more moves, or 'done' to finish: done
-
-Final PGN:
-
-==================================================
-[Event "Friendly Match"]
-[Site "Home"]
-[Date "2025.11.18"]
-[Round "1"]
-[White "Alice"]
-[Black "Bob"]
-[Result "*"]
-
-1. e4 e5 
-2. Nf3 Nc6 
-3. Bb5 a6 
-*
-==================================================
-
-Saving PGN file...
-PGN file saved: pgn_output_files/Alice_Bob_2025.11.18_1.pgn
-
-Thank you for using Chess PGN Converter!
-```
-
-## Valid Move Notation
-
-### Piece Moves
-- **Pieces**: Use uppercase letters: K (King), Q (Queen), R (Rook), B (Bishop), N (Knight)
-- **Format**: `Piece + Square`
-- **Examples**: `Nf3`, `Bb5`, `Qd4`, `Ke2`, `Ra1`
-
-### Pawn Moves
-- **Format**: `Square` (no piece letter needed)
-- **Examples**: `e4`, `d5`, `a6`, `h3`
-
-### Captures
-- **Format**: `Piece + x + Square` or `File + x + Square` (for pawns)
-- **Examples**: `Nxf6`, `Bxc4`, `exd5`, `axb6`
-
-### Castling
-- **Kingside**: `O-O`
-- **Queenside**: `O-O-O`
-
-### Pawn Promotion
-- **Format**: `Move + = + Piece`
-- **Examples**: `e8=Q`, `axb8=N`, `d1=R`
-
-### Check and Checkmate
-- **Check**: Add `+` after the move: `Nf7+`, `Qh5+`
-- **Checkmate**: Add `#` after the move: `Qh5#`, `Ra8#`
-
-### Disambiguation
-When multiple pieces of the same type can move to the same square:
-- **By file**: `Nbd7`, `Rfe1`
-- **By rank**: `R1a3`, `N5f3`
-- **By both**: `Qh4e1`
-
-## Available Commands
-
-During move entry, you can use these commands:
-
-| Command | Description |
-|---------|-------------|
-| `quit`, `exit`, `done` | **Stop at any time** and proceed to save |
-| `undo` | Remove the last move entered |
-| `show` | Display all moves entered so far |
-| `preview` | Show current PGN preview |
-| `legal` | **Show all legal moves** in current position |
-| `help` | Display help message with notation guide |
-
-### Stop at Any Time
-
-You can type `done` (or `quit`, `exit`) at **any point** during move entry:
-- After entering White's move → Game saves with that last White move
-- After entering Black's move → Game saves with complete move pair
-- At the very start → Exit without saving (no moves recorded)
-
-You can also press **Ctrl+C** at any time to interrupt the program. If you have recorded moves, you'll be prompted to save before exiting.
-
-The system will automatically save whatever moves you've entered so far.
-
-## Output Format
-
-Generated PGN files follow the standard format with:
-
-### Seven Tag Roster (Required Headers)
-```
-[Event "?"]
-[Site "?"]
-[Date "YYYY.MM.DD"]
-[Round "?"]
-[White "?"]
-[Black "?"]
-[Result "?"]
-```
-
-### Move Text
-- One move pair per line
-- Format: `1. e4 e5`
-- Result marker at the end
-
-### Example Output
-```pgn
-[Event "Friendly Match"]
-[Site "Home"]
-[Date "2025.11.18"]
-[Round "1"]
-[White "Alice"]
-[Black "Bob"]
-[Result "1-0"]
-
-1. e4 e5 
-2. Nf3 Nc6 
-3. Bb5 a6 
-4. Ba4 Nf6 
-5. O-O Nxe4 
-1-0
-```
-
-## File Naming
-
-Files are automatically named based on the game metadata and saved in the `pgn_output_files/` directory:
-
-**Format**: `pgn_output_files/white_black_date_round.pgn`
-
-**Examples**:
-- `pgn_output_files/Alice_Bob_2025.11.18_1.pgn`
-- `pgn_output_files/John_Doe_Jane_Smith_2025.11.18_2.pgn`
-
-If a file with the same name exists, a number is appended: `Alice_Bob_2025.11.18_1_2.pgn`
-
-The output directory is created automatically if it doesn't exist.
-
-## Testing
-
-### Using Hatch (Recommended)
+## Development
 
 ```bash
-# Run all tests
-hatch run test
+# Run tests
+hatch run test              # All tests
+hatch run test-cov          # With coverage
 
-# Run with verbose output
-hatch run test-verbose
+# Code quality
+hatch run lint              # Flake8
+hatch run typecheck         # Mypy
+hatch run format            # Black formatter
+hatch run check-all         # All checks
 
-# Run with coverage report
-hatch run test-cov
+# Build & publish
+hatch build                 # Create wheel
+hatch publish -r test       # TestPyPI
+hatch publish               # PyPI
 ```
 
-### Using pytest directly
+---
 
-```bash
-# Basic test run
-pytest test_chess_pgn.py
+## Documentation
 
-# Verbose output
-pytest test_chess_pgn.py -v
+- **[Usage Guide](docs/USAGE.md)** - Detailed examples and move notation
+- **[Development Guide](docs/DEVELOPMENT.md)** - Architecture and contributing  
+- **[Release Guide](docs/RELEASE.md)** - Publishing to PyPI
+- **[CHANGELOG](CHANGELOG.md)** - Version history
+- **[All Docs](docs/)** - Complete documentation index
 
-# With coverage
-pytest --cov=. --cov-report=term-missing test_chess_pgn.py
-```
-
-### Test Coverage
-
-The test suite includes **46 comprehensive tests**:
-- Move validation (all notation types) - 15 tests
-- Legal move validation - 4 tests
-- Board state tracking - 7 tests
-- Game state management - 10 tests
-- Move editing and undo - 6 tests
-- PGN generation and formatting - 8 tests
-- File output and naming - 4 tests
-- Integration tests - 2 tests
-
-**Coverage**: 84-91% for core modules
-
-## Development with Hatch
-
-This project uses [Hatch](https://hatch.pypa.io/) for modern Python project management.
-
-### Hatch Commands
-
-```bash
-# Testing
-hatch run test              # Run all tests
-hatch run test-verbose      # Run tests with verbose output
-hatch run test-cov          # Run tests with coverage report
-
-# Code Quality
-hatch run lint              # Run flake8 linter
-hatch run typecheck         # Run mypy type checker
-hatch run format-check      # Check code formatting with black
-hatch run format            # Auto-format code with black
-hatch run check-all         # Run all checks (lint + typecheck + test-cov)
-
-# Environment
-hatch shell                 # Enter virtual environment shell
-hatch env prune             # Clean environment
-```
-
-### Benefits of Using Hatch
-- Automatic virtual environment management
-- Dependency isolation
-- Consistent testing across environments
-- Modern Python packaging standards
-- Easy script execution
-- Integrated code quality tools
-
-## Continuous Integration
-
-This project uses GitHub Actions for continuous integration:
-
-### CI Pipeline
-- **Multi-version testing**: Tests run on Python 3.8, 3.9, 3.10, 3.11, and 3.12
-- **Code linting**: Flake8 checks for code quality and style issues
-- **Type checking**: Mypy validates type hints and catches type errors
-- **Code formatting**: Black ensures consistent code style
-- **Test coverage**: Coverage reports are generated and uploaded to Codecov
-
-### Running CI Checks Locally
-
-Before pushing code, run all CI checks locally:
-
-```bash
-# Run all checks at once
-hatch run check-all
-
-# Or run individually
-hatch run lint        # Linting with flake8
-hatch run typecheck   # Type checking with mypy
-hatch run test-cov    # Tests with coverage
-```
-
-### Code Quality Standards
-- **Line length**: Maximum 127 characters
-- **Complexity**: Maximum complexity of 10
-- **Type hints**: Encouraged but not strictly enforced
-- **Code style**: Black formatting (100 character line length)
+---
 
 ## Project Structure
 
 ```
 chess_pgn_recorder/
-├── chess_pgn_recorder.py   # Main entry point script
-├── pyproject.toml          # Project configuration (hatchling)
-├── requirements.txt        # Dependencies
-├── DESIGN_DOC.md           # Detailed design documentation
-├── README.md               # This file
-├── src/                    # Source code directory
-│   ├── __init__.py        # Package initialization
-│   ├── chess_pgn.py       # Main application logic
-│   ├── chess_game.py      # Game state management
-│   ├── move_validator.py  # Move validation logic
-│   └── pgn_exporter.py    # PGN file generation
-├── tests/                  # Test directory
-│   ├── __init__.py        # Test package initialization
-│   └── test_chess_pgn.py  # Unit tests (46 tests)
-├── examples/
-│   └── sample_game.pgn    # Example output
-└── pgn_output_files/       # Generated PGN files (auto-created)
+├── src/                  # Source code
+│   ├── chess_pgn.py      # CLI + workflow
+│   ├── chess_game.py     # Board + state management
+│   ├── move_validator.py # SAN validation
+│   └── pgn_exporter.py   # PGN formatting
+├── tests/                # 46 pytest tests (85%+ coverage)
+├── docs/                 # Detailed documentation
+└── .github/workflows/    # CI/CD pipelines
 ```
 
-## Common Errors and Solutions
-
-### "Piece notation must be uppercase"
-Invalid: `nf3`  
-Valid: `Nf3`
-
-Piece letters must be uppercase: K, Q, R, B, N
-
-### "Invalid rank: ranks must be 1-8"
-Invalid: `e9`  
-Valid: `e8`
-
-Valid ranks are 1 through 8 only.
-
-### "Invalid promotion piece"
-Invalid: `e8=K`  
-Valid: `e8=Q`
-
-Can only promote to Queen (Q), Rook (R), Bishop (B), or Knight (N).
-
-### "Invalid castling notation"
-Invalid: `0-0` (zeros)  
-Valid: `O-O` (capital letter O)
-
-Use the letter O, not the number 0.
-
-## Chess Engine Integration
-
-This application uses the **`python-chess`** library by Niklas Fiekas for:
-- Full chess rules enforcement  
-- Legal move validation
-- Board state tracking
-- Check/checkmate detection
-- Stalemate and draw detection
-
-**Only legal moves are accepted!** The system will reject:
-- Moves that leave your king in check
-- Moves that don't follow piece movement rules  
-- Castling when not allowed
-- Any move that's illegal in the current position
-
-## Future Enhancements
-
-Potential features for future versions:
-- Board state tracking for legal move validation
-- Load and edit existing PGN files
-- Multiple game support in one session
-- Move comments and annotations
-- Time control tracking
-- FEN position export
-- Game database integration
+---
 
 ## Contributing
 
-This is an educational project for learning Python. Feel free to:
-- Report issues or bugs
-- Suggest new features
-- Submit improvements
-- Use as a learning resource
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
+
+1. Fork and clone
+2. Create feature branch
+3. Run `hatch run check-all`
+4. Submit PR
+
+Issues and suggestions welcome!
+
+---
 
 ## License
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
-
-Copyright 2025 Lalatendu Mohanty
-
-## Support
-
-For questions or issues:
-1. Check the DESIGN_DOC.md for detailed technical information
-2. Review the examples in this README
-3. Run tests to ensure proper installation
-4. Type `help` in the application for quick reference
-
-## Contributing
-
-This project is part of a Python training repository but welcomes contributions:
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes with tests
-4. Submit a pull request
-
-## Acknowledgments
-
-- Chess notation standards: [FIDE Handbook](https://handbook.fide.com/)
-- PGN specification: [PGN Standard](http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm)
-- Chess engine: [python-chess](https://github.com/niklasf/python-chess) by Niklas Fiekas
+Apache License 2.0 © 2025 Lalatendu Mohanty
 
 ---
 
 **Happy Chess Recording!**
-

@@ -31,21 +31,49 @@
   
 - **CI Badges in README**
   - GitHub Actions CI status badge
+  - PyPI version badge
+  - PyPI downloads badge
   - Python version badge
   - License badge
   - Code style badge
 
+- **PyPI Publishing Setup**
+  - `RELEASE.md` - Comprehensive release guide
+  - `PYPI_SETUP.md` - Quick start guide for PyPI publishing
+  - GitHub Actions workflow for automated PyPI publishing
+  - Hatch scripts for building and publishing
+  - Package metadata configured for PyPI
+  - Author email added to pyproject.toml
+- **Documentation Refresh**
+  - README trimmed to essentials (quick start, workflow, commands)
+  - DESIGN_DOC rewritten as concise architecture brief
+  - Documentation map added for quicker discovery
+
 ### Changed
+- **Code Refactoring for Reduced Complexity**
+  - Extracted helper methods from complex functions
+  - Reduced cyclomatic complexity to ≤15 for all methods
+  - `enter_moves()`: 78 lines → 10 lines (uses `_enter_move_pair()` helper)
+  - `add_more_moves()`: 115 lines → 30 lines (uses extracted helpers)
+  - `preview_and_edit()`: 77 lines → 50 lines (uses `_edit_single_move()` helper)
+  - Added 6 private helper methods: `_get_validated_move()`, `_display_move_confirmation()`, etc.
+  - Total code reduction: ~75 lines eliminated through DRY principles
+
 - **Code Cleanup**
   - Removed all inline comments from source files
   - Documentation now provided through docstrings only
   - Code is self-documenting with clear function/variable names
+  - Black auto-formatting applied to all files
   
-- **Documentation Updates**
-  - Added "Continuous Integration" section to README
-  - Updated development workflow documentation
-  - Expanded Hatch commands documentation
-  - Added code quality standards section
+- **Documentation Reorganization**
+  - README.md: 621 lines → 139 lines (77% reduction)
+  - DESIGN_DOC.md: 867 lines → 132 lines (85% reduction)
+  - Moved detailed docs to `docs/` directory:
+    - `docs/USAGE.md` - Detailed usage examples and notation (202 lines)
+    - `docs/DEVELOPMENT.md` - Architecture and dev setup (251 lines)
+    - `docs/README.md` - Documentation index (46 lines)
+  - Relocated release guides: RELEASE.md, PYPI_SETUP.md, PYPI_CHECKLIST.md to `docs/`
+  - Root README now scannable and focused on quick start
   
 - **Updated `.gitignore`**
   - Added `.ruff_cache/` directory

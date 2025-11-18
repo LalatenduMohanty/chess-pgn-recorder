@@ -10,6 +10,5 @@ from .chess_game import ChessGame
 from .move_validator import MoveValidator
 from .pgn_exporter import PGNExporter
 
-__all__ = ['ChessPGNApp', 'main', 'ChessGame', 'MoveValidator', 'PGNExporter']
-__version__ = '0.1.1-alpha'
-
+__all__ = ["ChessPGNApp", "main", "ChessGame", "MoveValidator", "PGNExporter"]
+__version__ = "0.1.1-alpha"
