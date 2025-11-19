@@ -5,12 +5,12 @@ build-backend = "hatchling.build"
 [project]
 name = "chess-pgn-recorder"
 version = "0.1.1a1"
-description = "Interactive chess game recorder that converts moves in algebraic notation to PGN files with legal move validation"
+description = "Record chess games in algebraic notation and export PGN files compatible with Chess.com, Lichess, and all major analysis tools"
 readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "Apache-2.0"}
 authors = [
-    {name = "Lalatendu Mohanty"},
+    {name = "Lalatendu Mohanty", email = "itslalatendu@gmail.com"},
 ]
 keywords = ["chess", "pgn", "algebraic-notation", "chess-game", "chess-recorder"]
 classifiers = [
@@ -72,6 +72,12 @@ check-all = [
     "typecheck",
     "test-cov",
 ]
+build-check = [
+    "hatch build",
+    "twine check dist/*",
+]
+publish-test = "hatch publish -r test"
+publish-prod = "hatch publish"
 
 [tool.hatch.envs.test]
 dependencies = [
@@ -126,7 +132,7 @@ extend-exclude = '''
 '''
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 warn_return_any = true
 warn_unused_configs = true
 ignore_missing_imports = true
