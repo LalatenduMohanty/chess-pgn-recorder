@@ -32,7 +32,7 @@ Complete documentation for Chess PGN Recorder.
 
 | Need | Document |
 |------|----------|
-| Install and run | [README.md](../README.md) |
+| Install and run (`chessrec`) | [README.md](../README.md) |
 | Learn move notation | [USAGE.md](USAGE.md#move-notation-reference) |
 | Set up development | [DEVELOPMENT.md](DEVELOPMENT.md#setup) |
 | Understand architecture | [DESIGN_DOC.md](../DESIGN_DOC.md) |

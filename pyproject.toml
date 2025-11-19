@@ -40,7 +40,7 @@ dev = [
 ]
 
 [project.scripts]
-chess-pgn-recorder = "src.chess_pgn:main"
+chessrec = "src.chess_pgn:main"
 
 [project.urls]
 Repository = "https://github.com/lmohanty/chess-pgn-recorder"

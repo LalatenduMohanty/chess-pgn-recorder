@@ -123,7 +123,7 @@ Stable:  0.1.0, 0.1.1, 0.2.0, 1.0.0
 
 - [ ] Verify on PyPI: https://pypi.org/project/chess-pgn-recorder/
 - [ ] Test installation: `pip install chess-pgn-recorder`
-- [ ] Test CLI: `chess-pgn-recorder`
+- [ ] Test CLI: `chessrec`
 - [ ] Create GitHub release with notes
 - [ ] Update badges if needed
 - [ ] Announce (optional)

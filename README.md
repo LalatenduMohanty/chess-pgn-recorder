@@ -14,7 +14,7 @@ Record chess games move-by-move in Standard Algebraic Notation, validate every m
 
 ```bash
 pip install chess-pgn-recorder
-chess-pgn-recorder
+chessrec
 ```
 
 Or from source:
@@ -40,7 +40,7 @@ python chess_pgn_recorder.py
 ## Example Usage
 
 ```
-$ chess-pgn-recorder
+$ chessrec
 Event: Friendly Match
 White player: Alice | Black player: Bob
 
@@ -88,20 +88,24 @@ Find your PGN files in the `pgn_output_files/` directory.
 ## Development
 
 ```bash
+# Run application
+python chess_pgn_recorder.py  # From source
+chessrec                       # If installed from PyPI
+
 # Run tests
-hatch run test              # All tests
-hatch run test-cov          # With coverage
+hatch run test                 # All tests
+hatch run test-cov             # With coverage
 
 # Code quality
-hatch run lint              # Flake8
-hatch run typecheck         # Mypy
-hatch run format            # Black formatter
-hatch run check-all         # All checks
+hatch run lint                 # Flake8
+hatch run typecheck            # Mypy
+hatch run format               # Black formatter
+hatch run check-all            # All checks
 
 # Build & publish
-hatch build                 # Create wheel
-hatch publish -r test       # TestPyPI
-hatch publish               # PyPI
+hatch build                    # Create wheel
+hatch publish -r test          # TestPyPI
+hatch publish                  # PyPI
 ```
 
 ---

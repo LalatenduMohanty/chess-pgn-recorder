@@ -6,7 +6,7 @@ Detailed examples and notation reference for Chess PGN Recorder.
 
 ## Basic Workflow
 
-1. Run `chess-pgn-recorder` or `python chess_pgn_recorder.py`
+1. Run `chessrec` (if installed) or `python chess_pgn_recorder.py` (from source)
 2. Enter game metadata (Event, Site, Date, Round, players)
 3. Input moves in Standard Algebraic Notation
 4. Stop anytime with `done` - partial games are preserved
@@ -58,7 +58,7 @@ Detailed examples and notation reference for Chess PGN Recorder.
 ### Complete Game
 
 ```
-$ chess-pgn-recorder
+$ chessrec
 
 Event: Club Tournament
 Site: Chess Club

@@ -151,7 +151,7 @@ password = pypi-your-production-token-here
 **Test Installation:**
 ```bash
 pip install chess-pgn-recorder
-chess-pgn-recorder
+chessrec
 ```
 
 ## Using Hatch for Publishing
@@ -206,7 +206,7 @@ GitHub Actions will automatically:
 
 - [ ] Package appears on PyPI: https://pypi.org/project/chess-pgn-recorder/
 - [ ] Installation works: `pip install chess-pgn-recorder`
-- [ ] Command works: `chess-pgn-recorder`
+- [ ] Command works: `chessrec`
 - [ ] Update GitHub release notes
 - [ ] Update version badges in README
 - [ ] Announce release (if applicable)

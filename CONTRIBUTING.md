@@ -27,6 +27,11 @@ Thank you for your interest in contributing to Chess PGN Recorder! This document
    pip install -e ".[dev]"
    ```
 
+4. **Verify installation**
+   ```bash
+   chessrec  # Should launch the application
+   ```
+
 ## Development Workflow
 
 ### Running Tests

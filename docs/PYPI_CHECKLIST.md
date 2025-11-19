@@ -22,7 +22,7 @@ Package successfully built and verified:
 - [x] Dependencies: `chess>=1.10.0`
 - [x] Keywords: chess, pgn, algebraic-notation, etc.
 - [x] Classifiers: Development Status, License, Python versions
-- [x] Entry point: `chess-pgn-recorder` command
+- [x] Entry point: `chessrec` command
 - [x] Project URLs: Repository, Documentation, Issues
 
 ### Build Configuration
@@ -94,8 +94,8 @@ pip install --index-url https://test.pypi.org/simple/ \
             --extra-index-url https://pypi.org/simple/ \
             chess-pgn-recorder
 
-# 5. Verify
-chess-pgn-recorder
+# 5. Verify CLI works
+chessrec
 ```
 
 ### Production Release to PyPI
@@ -112,7 +112,7 @@ hatch publish
 
 - [ ] Verify on PyPI: https://pypi.org/project/chess-pgn-recorder/
 - [ ] Test installation: `pip install chess-pgn-recorder`
-- [ ] Test CLI: `chess-pgn-recorder`
+- [ ] Test CLI: `chessrec`
 - [ ] Create GitHub release
 - [ ] Update version for next development cycle
 - [ ] Tweet/announce (optional)
